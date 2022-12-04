@@ -17,7 +17,7 @@ void loop()
 {
     float sensorValue = analogRead(A1);
     int digitalSensorValue = int(sensorValue/1024*255);
-    if ((digitalSensorValue>=0) && (digitalSensorValue<=85)){
+    if ((digitalSensorValue>1) && (digitalSensorValue<=85)){
       msg = "LEFT_LOWSPED";
     }
     else if ((digitalSensorValue>85) && (digitalSensorValue<=170)){
@@ -27,9 +27,11 @@ void loop()
       msg = "LEFT_HGHSPED";
     }
     else{
-      msg = "LEFT_ERRSPED";
+      msg = "LEFT_NULSPED";
     }
-    if (counter>=5){
+
+    //Timer to send signal
+    if (counter>=1){
       driver.send((uint8_t *)msg, strlen(msg));
       driver.waitPacketSent();
       Serial.println(digitalSensorValue);

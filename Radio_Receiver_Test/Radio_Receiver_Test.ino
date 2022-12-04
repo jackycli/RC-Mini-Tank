@@ -13,6 +13,7 @@ int state2;
 
 const int ENA = 9;
 const int ENB = 10;
+int digitalSensorValue;
 
 void setup()
 {
@@ -37,20 +38,31 @@ void loop()
 {
    
 
-    //Radio Receiver
-    uint8_t buf[12];
-    uint8_t buflen = sizeof(buf);
-    if (driver.recv(buf, &buflen)) // Non-blocking
-    {
-      int i;
-      // Message with a good checksum received, dump it.
-      Serial.print("Message: ");
-      Serial.println((char*)buf);         
-    }
+  //Radio Receiver
+  uint8_t buf[12];
+  uint8_t buflen = sizeof(buf);
+  if (driver.recv(buf, &buflen)) // Non-blocking
+  {
+    int i;
+    // Message with a good checksum received, dump it.
+    Serial.print("Message: ");
+    Serial.println((char*)buf);         
+  }
     
   
   //Motor Control
-
+  if (buf == "LEFT_LOWSPED"){
+    digitalSensorValue = 60;
+  }
+  else if (buf == "LEFT_MEDSPED"){
+    digitalSensorValue = 170;
+  }
+  else if (buf == "LEFT_HGHSPED"){
+    digitalSensorValue = 230;
+  }
+  else{
+    digitalSensorValue = 0;
+  }
   // if(digitalRead(SWITCH1)==0)
   // {
   //   state1 = LOW;
@@ -77,7 +89,7 @@ void loop()
   digitalWrite(IN3, state1);
   digitalWrite(IN4, state2);
   
-  Serial.println(digitalSensorValue);
+  //Serial.println(digitalSensorValue);
   
   
     
