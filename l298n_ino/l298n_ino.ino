@@ -46,6 +46,8 @@ void loop() {
     //Serial.println("Rotation2");
 
   }
+
+
   analogWrite(ENA, digitalSensorValue);
   analogWrite(ENB, digitalSensorValue); 
   digitalWrite(IN1, state1);

@@ -2,7 +2,7 @@
 #include <RH_ASK.h>
 #include <SPI.h> // Not actually used but needed to compile
 
-RH_ASK driver(2000,8,8,5);
+RH_ASK driver(2000,12,12,5);
 
 void setup()
 {
