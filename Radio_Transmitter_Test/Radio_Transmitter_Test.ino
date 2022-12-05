@@ -31,7 +31,7 @@ void loop()
     }
 
     //Timer to send signal
-    if (counter>=1){
+    if (counter>=5){
       driver.send((uint8_t *)msg, strlen(msg));
       driver.waitPacketSent();
       Serial.println(digitalSensorValue);

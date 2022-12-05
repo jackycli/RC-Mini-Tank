@@ -1,5 +1,6 @@
 #include <RH_ASK.h>
 #include <SPI.h> // Not actually used but needed to compile
+#include <string.h>
 
 RH_ASK driver(2000,12,12,5);
 
@@ -13,7 +14,7 @@ int state2;
 
 const int ENA = 9;
 const int ENB = 10;
-int digitalSensorValue;
+
 
 void setup()
 {
@@ -22,7 +23,7 @@ void setup()
   pinMode (IN2, OUTPUT);
   pinMode (IN3, OUTPUT);
   pinMode (IN4, OUTPUT);
-  pinMode (SWITCH1, INPUT_PULLUP);
+  // pinMode (SWITCH1, INPUT_PULLUP);
   
   
   pinMode (ENA, OUTPUT);
@@ -37,60 +38,67 @@ void setup()
 void loop()
 {
    
-
+  int digitalSensorValue = 0;
   //Radio Receiver
   uint8_t buf[12];
   uint8_t buflen = sizeof(buf);
-  if (driver.recv(buf, &buflen)) // Non-blocking
-  {
-    int i;
-    // Message with a good checksum received, dump it.
-    Serial.print("Message: ");
-    Serial.println((char*)buf);         
-  }
-    
   
-  //Motor Control
-  if (buf == "LEFT_LOWSPED"){
-    digitalSensorValue = 60;
-  }
-  else if (buf == "LEFT_MEDSPED"){
-    digitalSensorValue = 170;
-  }
-  else if (buf == "LEFT_HGHSPED"){
-    digitalSensorValue = 230;
-  }
-  else{
-    digitalSensorValue = 0;
-  }
-  // if(digitalRead(SWITCH1)==0)
+  // if (driver.recv(buf, &buflen)) // Non-blocking
   // {
-  //   state1 = LOW;
-  //   state2 = HIGH;
-  //   //Serial.println("Rotation1");
+  //   int i;
+    
+  //   x = ((String)(char*)buf);  
+    
+  //   Serial.println(x+ " :"+x.length());  
+
+  // //Motor Control
+  
+  // // if (x == "LEFT_LOWSPED"){
+  // //   digitalSensorValue = 60;
+  // //   // Serial.println("1");
+  // // }
+  // // else if (x == "LEFT_MEDSPED"){
+  // //   digitalSensorValue = 170;
+  // //   // Serial.println("2");
+  // // }
+  // // else if (x == "LEFT_HGHSPED"){
+  // //   digitalSensorValue = 230;
+  // //   // Serial.println("3");
+  // // }
+  // // else{
+  // //   digitalSensorValue = 170;
+    
+  // //   // Serial.println("-");
+  // // }
+  //  //Serial.println(digitalSensorValue);
+  // // if(digitalRead(SWITCH1)==0)
+  // // {
+  // //   state1 = LOW;
+  // //   state2 = HIGH;
+  // //   //Serial.println("Rotation1");
 
     
-  // }
-  // else if (digitalRead(SWITCH1)==1)
-  // {
-  //   state1 = HIGH;
-  //   state2 = LOW;
-  //   //Serial.println("Rotation2");
+  // // }
+  // // else if (digitalRead(SWITCH1)==1)
+  // // {
+  // //   state1 = HIGH;
+  // //   state2 = LOW;
+  // //   //Serial.println("Rotation2");
 
+  // // }
+  
+    
   // }
-
+  digitalSensorValue = 170;
   //L298N Pin states
-  state1 = LOW;
-  state2 = HIGH;
-  analogWrite(ENA, digitalSensorValue);
-  analogWrite(ENB, digitalSensorValue); 
-  digitalWrite(IN1, state1);
-  digitalWrite(IN2, state2);
-  digitalWrite(IN3, state1);
-  digitalWrite(IN4, state2);
-  
-  //Serial.println(digitalSensorValue);
-  
-  
+  int state1 = LOW;
+  int state2 = HIGH;
+  //Serial.println(state1+" "+state2 );   
+  analogWrite(ENA, 170);
+  analogWrite(ENB, 170); 
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
     
 }
