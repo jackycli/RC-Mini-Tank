@@ -1,6 +1,6 @@
 #include <RH_ASK.h>
 #include <SPI.h> // Not actually used but needed to compile
-char *msg;
+int msg = B00000000;
 RH_ASK driver(2000,12,12,5);
 int counter;
 
@@ -18,16 +18,19 @@ void loop()
     float sensorValue = analogRead(A1);
     int digitalSensorValue = int(sensorValue/1024*255);
     if ((digitalSensorValue>1) && (digitalSensorValue<=85)){
-      msg = "LEFT_LOWSPED";
+      msg = (msg & B11111000);
+      msg = (msg | B00000001);
     }
     else if ((digitalSensorValue>85) && (digitalSensorValue<=170)){
-      msg = "LEFT_MEDSPED";
+      msg = (msg & B11111000);
+      msg = (msg | B00000010);
     }
     else if ((digitalSensorValue>170) && (digitalSensorValue<=255)){
-      msg = "LEFT_HGHSPED";
+      msg = (msg & B11111000);
+      msg = (msg | B00000100);
     }
     else{
-      msg = "LEFT_NULSPED";
+      msg = (msg & B11111000);
     }
 
     //Timer to send signal
@@ -36,7 +39,7 @@ void loop()
       driver.waitPacketSent();
       Serial.println(digitalSensorValue);
       Serial.print("Msg:");
-      Serial.println((char*)msg);
+      Serial.println(msg,BIN);
     }
     counter = counter+1;
 }

@@ -40,17 +40,17 @@ void loop()
    
   int digitalSensorValue = 0;
   //Radio Receiver
-  uint8_t buf[12];
+  uint8_t buf[8];
   uint8_t buflen = sizeof(buf);
   
-  // if (driver.recv(buf, &buflen)) // Non-blocking
-  // {
-  //   int i;
+  if (driver.recv(buf, &buflen)) // Non-blocking
+  {
+    int i;
     
-  //   x = ((String)(char*)buf);  
+    String x = ((String)(char*)buf);  
     
-  //   Serial.println(x+ " :"+x.length());  
-
+    Serial.println(x+ " :"+x.length());  
+  }
   // //Motor Control
   
   // // if (x == "LEFT_LOWSPED"){
@@ -89,7 +89,7 @@ void loop()
   
     
   // }
-  digitalSensorValue = 170;
+  
   //L298N Pin states
   int state1 = LOW;
   int state2 = HIGH;
