@@ -6,7 +6,13 @@
 RH_ASK driver(2000,12,12,5);
 
 //Counter to delay radio tramsit
-int counter;
+unsigned int counter;
+
+//Data to be saved
+float raw_right_Speed;
+float raw_right_Direction;
+float raw_left_Speed;
+float raw_left_Direction;
 
 //Create data structure to be sent over radio, 8 bytes long
 struct dataStruct{
@@ -25,7 +31,7 @@ void setup()
   Serial.begin(9600);    
   if (!driver.init())
         Serial.println("init failed");
-  radioBuf.left_Speed = 1532;
+  
   radioBuf.left_Direction = 0;
   radioBuf.right_Direction = 1;
 
@@ -34,7 +40,14 @@ void setup()
 void loop()
 {
     //Get analog data from pot
-    radioBuf.right_Speed = analogRead(A1);
+    raw_right_Speed = analogRead(A1);
+    
+    radioBuf.right_Speed = raw_right_Speed*255/1024;
+
+    raw_left_Speed = analogRead(A1);
+   
+    radioBuf.left_Speed = 255-raw_left_Speed*255/1024;
+    
     
     //Copies data from radioBuf structure to binary array
     memcpy(tx_buf, &radioBuf, sizeof(radioBuf));
@@ -42,10 +55,19 @@ void loop()
     
     
     //Timer to send signal
-    if (counter>=5){
+    if (counter>=20){
       driver.send((uint8_t *)tx_buf, size_radioBuf);
       driver.waitPacketSent();
-      Serial.println(radioBuf.right_Speed);
+
+      Serial.print("Right Speed");
+      Serial.print(radioBuf.right_Speed);
+      Serial.print("    Right Direction");
+      Serial.print(radioBuf.right_Direction);
+      Serial.print("    Left Speed");
+      Serial.print(radioBuf.left_Speed);
+      Serial.print("    Right Direction");
+      Serial.println(radioBuf.left_Direction);
+      // if (counter>=32000) counter = 0;
     }
     counter = counter+1;
 }

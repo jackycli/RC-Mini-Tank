@@ -50,17 +50,23 @@ void loop() {
     // Message with a good checksum received, dump it.
     driver.printBuffer("Got:", buf, buflen);
     memcpy(&radioBuf, buf, sizeof(radioBuf));
- 
+    Serial.print("Right Speed");
+    Serial.print(radioBuf.right_Speed);
+    Serial.print("    Right Direction");
+    Serial.print(radioBuf.right_Direction);
+    Serial.print("    Left Speed");
+    Serial.print(radioBuf.left_Speed);
+    Serial.print("    Right Direction");
+    Serial.println(radioBuf.left_Direction);
   }
-  
 
-  // analogWrite(ENA, y);
-  // analogWrite(ENB, y); 
-  // digitalWrite(IN1, state1);
-  // digitalWrite(IN2, state2);
-  // digitalWrite(IN3, state1);
-  // digitalWrite(IN4, state2);
 
-  
+  //analogWrite(ENA, 255);
+  analogWrite(ENB, 254); 
+  digitalWrite(IN1, LOW);
+  digitalWrite(IN2, HIGH);
+  digitalWrite(IN3, LOW);
+  digitalWrite(IN4, HIGH);
+
 
 }
