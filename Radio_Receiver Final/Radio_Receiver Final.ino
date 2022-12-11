@@ -8,8 +8,8 @@ const int IN2 = 5;
 const int IN1 = 4;
 
 //PWM assignment
-const int ENA = 9;
-const int ENB = 10;
+const int ENA = 3;
+const int ENB = 11;
 
 //Both using pin 12, on transmitter and receiver
 RH_ASK driver(2000,12,12,5);
@@ -62,7 +62,7 @@ void loop() {
 
 
   //analogWrite(ENA, 255);
-  analogWrite(ENB, 254); 
+  analogWrite(ENB, radioBuf.right_Speed); 
   digitalWrite(IN1, LOW);
   digitalWrite(IN2, HIGH);
   digitalWrite(IN3, LOW);
