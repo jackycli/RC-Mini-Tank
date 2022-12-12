@@ -7,7 +7,7 @@ const int IN3 = 6;
 const int IN2 = 5;
 const int IN1 = 4;
 
-//PWM assignment
+//PWM pin assignment
 const int ENA = 3;
 const int ENB = 11;
 
@@ -15,7 +15,7 @@ const int ENB = 11;
 RH_ASK driver(2000,12,12,5);
 
 //Create data structure to be received over radio, 8 bytes long
-struct dataStruct{
+struct radioBuf{
   unsigned int left_Speed; 
   unsigned int left_Direction;
   unsigned int right_Speed;
@@ -28,11 +28,11 @@ void setup() {
   pinMode (IN2, OUTPUT);
   pinMode (IN3, OUTPUT);
   pinMode (IN4, OUTPUT);
-  
-  Serial.begin(9600);  // Debugging only
+
   pinMode (ENA, OUTPUT);
   pinMode (ENB, OUTPUT);
-
+  
+  Serial.begin(9600);  // Debugging only
   if (!driver.init())
          Serial.println("init failed");
 
