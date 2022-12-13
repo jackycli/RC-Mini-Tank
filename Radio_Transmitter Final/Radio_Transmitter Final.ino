@@ -5,14 +5,16 @@
 //Both using pin 12, on transmitter and receiver
 RH_ASK driver(2000,12,12,5);
 
+//Pin Assignment
+const int right_Switch = 8;
 //Counter to delay radio tramsit
 unsigned int counter;
 
 //Data to be saved
 float raw_right_Speed;
-float raw_right_Direction;
+int raw_right_Direction;
 float raw_left_Speed;
-float raw_left_Direction;
+int raw_left_Direction;
 
 //Create data structure to be sent over radio, 8 bytes long
 struct dataStruct{
@@ -27,13 +29,16 @@ byte tx_buf[sizeof(radioBuf)] = {0};
 
 void setup()
 {
+  //Direction pin
+  pinMode (8, INPUT_PULLUP);
+
   // Debugging only
   Serial.begin(9600);    
   if (!driver.init())
         Serial.println("init failed");
   
   radioBuf.left_Direction = 0;
-  radioBuf.right_Direction = 1;
+  
 
 }
 
@@ -47,7 +52,9 @@ void loop()
     raw_left_Speed = analogRead(A1);
    
     radioBuf.left_Speed = 255-raw_left_Speed*255/1024;
-    
+
+    raw_right_Direction = digitalRead(right_Switch);
+    radioBuf.right_Direction = raw_right_Direction;
     
     //Copies data from radioBuf structure to binary array
     memcpy(tx_buf, &radioBuf, sizeof(radioBuf));
@@ -65,8 +72,10 @@ void loop()
       Serial.print(radioBuf.right_Direction);
       Serial.print("    Left Speed");
       Serial.print(radioBuf.left_Speed);
-      Serial.print("    Right Direction");
+      Serial.print("    Left Direction");
       Serial.println(radioBuf.left_Direction);
+      
+      
       // if (counter>=32000) counter = 0;
     }
     counter = counter+1;

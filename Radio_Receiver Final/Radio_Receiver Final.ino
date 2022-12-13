@@ -22,6 +22,8 @@ struct radioBuf{
   unsigned int right_Direction;
 }radioBuf;
 
+int l_State1, l_State2, r_State1, r_State2;
+
 void setup() {
   
   pinMode (IN1, OUTPUT);
@@ -59,14 +61,21 @@ void loop() {
     Serial.print("    Right Direction");
     Serial.println(radioBuf.left_Direction);
   }
-
+  if (radioBuf.right_Direction == 0){
+    r_State1 = HIGH;
+    r_State2 = LOW;
+  }
+  if (radioBuf.right_Direction == 1){
+    r_State1 = LOW;
+    r_State2 = HIGH;
+  }
 
   //analogWrite(ENA, 255);
   analogWrite(ENB, radioBuf.right_Speed); 
-  digitalWrite(IN1, LOW);
-  digitalWrite(IN2, HIGH);
-  digitalWrite(IN3, LOW);
-  digitalWrite(IN4, HIGH);
+  digitalWrite(IN1, l_State1);
+  digitalWrite(IN2, l_State2);
+  digitalWrite(IN3, r_State1);
+  digitalWrite(IN4, r_State2);
 
 
 }
