@@ -7,6 +7,7 @@ RH_ASK driver(2000,12,12,5);
 
 //Pin Assignment
 const int right_Switch = 8;
+const int left_Switch = 9;
 //Counter to delay radio tramsit
 unsigned int counter;
 
@@ -30,14 +31,15 @@ byte tx_buf[sizeof(radioBuf)] = {0};
 void setup()
 {
   //Direction pin
-  pinMode (8, INPUT_PULLUP);
-
+  pinMode (right_Switch, INPUT_PULLUP);
+  pinMode (left_Switch, INPUT_PULLUP);
+            
   // Debugging only
   Serial.begin(9600);    
   if (!driver.init())
         Serial.println("init failed");
   
-  radioBuf.left_Direction = 0;
+  
   
 
 }
@@ -45,16 +47,19 @@ void setup()
 void loop()
 {
     //Get analog data from pot
-    raw_right_Speed = analogRead(A1);
-    
+    raw_right_Speed = analogRead(A0);
+    if (raw_right_Speed>=1023) raw_right_Speed =1024;
     radioBuf.right_Speed = raw_right_Speed*255/1024;
 
     raw_left_Speed = analogRead(A1);
-   
-    radioBuf.left_Speed = 255-raw_left_Speed*255/1024;
+    if (raw_left_Speed>=1023) raw_left_Speed = 1024;
+    radioBuf.left_Speed = raw_left_Speed*255/1024;
 
     raw_right_Direction = digitalRead(right_Switch);
     radioBuf.right_Direction = raw_right_Direction;
+
+    raw_left_Direction = digitalRead(left_Switch);
+    radioBuf.left_Direction = raw_left_Direction;
     
     //Copies data from radioBuf structure to binary array
     memcpy(tx_buf, &radioBuf, sizeof(radioBuf));
@@ -74,9 +79,7 @@ void loop()
       Serial.print(radioBuf.left_Speed);
       Serial.print("    Left Direction");
       Serial.println(radioBuf.left_Direction);
-      
-      
-      // if (counter>=32000) counter = 0;
+      if (counter>=32000) counter = 0;
     }
     counter = counter+1;
 }
