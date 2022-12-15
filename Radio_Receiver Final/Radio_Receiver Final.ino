@@ -65,12 +65,21 @@ void loop() {
     r_State1 = HIGH;
     r_State2 = LOW;
   }
-  if (radioBuf.right_Direction == 1){
+  else if (radioBuf.right_Direction == 1){
     r_State1 = LOW;
     r_State2 = HIGH;
   }
 
-  //analogWrite(ENA, 255);
+  if (radioBuf.left_Direction == 0){
+    l_State1 = HIGH;
+    l_State2 = LOW;
+  }
+  else if (radioBuf.left_Direction == 1){
+    l_State1 = LOW;
+    l_State2 = HIGH;
+  }
+
+  analogWrite(ENA, radioBuf.left_Speed);
   analogWrite(ENB, radioBuf.right_Speed); 
   digitalWrite(IN1, l_State1);
   digitalWrite(IN2, l_State2);

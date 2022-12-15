@@ -47,7 +47,8 @@ void setup()
 void loop()
 {
     //Get analog data from pot
-    raw_right_Speed = analogRead(A0);
+    //raw_right_Speed = analogRead(A0);
+    raw_right_Speed = analogRead(A1);
     if (raw_right_Speed>=1023) raw_right_Speed =1024;
     radioBuf.right_Speed = raw_right_Speed*255/1024;
 
