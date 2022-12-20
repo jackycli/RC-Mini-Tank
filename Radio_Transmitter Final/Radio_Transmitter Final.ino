@@ -6,8 +6,8 @@
 RH_ASK driver(2000,12,12,5);
 
 //Pin Assignment
-const int right_Switch = 8;
-const int left_Switch = 9;
+//const int right_Switch = 8;
+//const int left_Switch = 9;
 //Counter to delay radio tramsit
 unsigned int counter;
 
@@ -31,8 +31,8 @@ byte tx_buf[sizeof(radioBuf)] = {0};
 void setup()
 {
   //Direction pin
-  pinMode (right_Switch, INPUT_PULLUP);
-  pinMode (left_Switch, INPUT_PULLUP);
+  // pinMode (right_Switch, INPUT_PULLUP);
+  // pinMode (left_Switch, INPUT_PULLUP);
             
   // Debugging only
   Serial.begin(9600);    
@@ -50,27 +50,37 @@ void loop()
     //raw_right_Speed = analogRead(A0);
     raw_right_Speed = analogRead(A0);
     if (raw_right_Speed>=1023) raw_right_Speed =1024;
-    if (raw_right_Speed<10) {
-       radioBuf.right_Speed = 0;
+    if (raw_right_Speed>=500 && raw_right_Speed<=524) {
+      radioBuf.right_Speed = 0;
     }
-    else{
-      radioBuf.right_Speed = raw_right_Speed*78/1024+177;
+    else if (raw_right_Speed<500){
+      radioBuf.right_Speed = (255-raw_right_Speed*78/500);
+      raw_right_Direction = 1;
     }
+
+    else if (raw_right_Speed>524){
+      radioBuf.right_Speed = raw_right_Speed*78/500+95.256;
+      raw_right_Direction = 0;
+    }
+
 
     raw_left_Speed = analogRead(A1);
     if (raw_left_Speed>=1023) raw_left_Speed = 1024;
-    if (raw_left_Speed<10) {
+    if (raw_left_Speed>=500 && raw_left_Speed<=524) {
       radioBuf.left_Speed = 0;
     }
-    else{
-      radioBuf.left_Speed = raw_left_Speed*51/1024+113;
+
+    else if (raw_left_Speed<500){
+      radioBuf.left_Speed = (255-raw_left_Speed*78/500);
+      raw_left_Direction = 1;
     }
 
+    else if (raw_left_Speed>524){
+      radioBuf.left_Speed = raw_left_Speed*78/500+95.256;
+      raw_left_Direction = 0;
+    }
 
-    raw_right_Direction = digitalRead(right_Switch);
     radioBuf.right_Direction = raw_right_Direction;
-
-    raw_left_Direction = digitalRead(left_Switch);
     radioBuf.left_Direction = raw_left_Direction;
     
     //Copies data from radioBuf structure to binary array
