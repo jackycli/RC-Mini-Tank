@@ -48,13 +48,24 @@ void loop()
 {
     //Get analog data from pot
     //raw_right_Speed = analogRead(A0);
-    raw_right_Speed = analogRead(A1);
+    raw_right_Speed = analogRead(A0);
     if (raw_right_Speed>=1023) raw_right_Speed =1024;
-    radioBuf.right_Speed = raw_right_Speed*255/1024;
+    if (raw_right_Speed<10) {
+       radioBuf.right_Speed = 0;
+    }
+    else{
+      radioBuf.right_Speed = raw_right_Speed*78/1024+177;
+    }
 
     raw_left_Speed = analogRead(A1);
     if (raw_left_Speed>=1023) raw_left_Speed = 1024;
-    radioBuf.left_Speed = raw_left_Speed*255/1024;
+    if (raw_left_Speed<10) {
+      radioBuf.left_Speed = 0;
+    }
+    else{
+      radioBuf.left_Speed = raw_left_Speed*51/1024+113;
+    }
+
 
     raw_right_Direction = digitalRead(right_Switch);
     radioBuf.right_Direction = raw_right_Direction;
@@ -80,7 +91,7 @@ void loop()
       Serial.print(radioBuf.left_Speed);
       Serial.print("    Left Direction");
       Serial.println(radioBuf.left_Direction);
-      if (counter>=32000) counter = 0;
+      counter = 0;
     }
     counter = counter+1;
 }

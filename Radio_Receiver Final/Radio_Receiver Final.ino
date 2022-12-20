@@ -79,8 +79,8 @@ void loop() {
     l_State2 = HIGH;
   }
 
-  analogWrite(ENA, radioBuf.left_Speed);
-  analogWrite(ENB, radioBuf.right_Speed); 
+  analogWrite(ENA, radioBuf.right_Speed);
+  analogWrite(ENB, radioBuf.left_Speed); 
   digitalWrite(IN1, l_State1);
   digitalWrite(IN2, l_State2);
   digitalWrite(IN3, r_State1);
