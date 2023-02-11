@@ -58,7 +58,7 @@ void loop() {
     Serial.print(radioBuf.right_Direction);
     Serial.print("    Left Speed");
     Serial.print(radioBuf.left_Speed);
-    Serial.print("    Right Direction");
+    Serial.print("    Left Direction");
     Serial.println(radioBuf.left_Direction);
   }
   if (radioBuf.right_Direction == 0){
@@ -81,10 +81,10 @@ void loop() {
 
   analogWrite(ENA, radioBuf.right_Speed);
   analogWrite(ENB, radioBuf.left_Speed); 
-  digitalWrite(IN1, l_State1);
-  digitalWrite(IN2, l_State2);
-  digitalWrite(IN3, r_State1);
-  digitalWrite(IN4, r_State2);
+  digitalWrite(IN1, r_State1);
+  digitalWrite(IN2, r_State2);
+  digitalWrite(IN3, l_State1);
+  digitalWrite(IN4, l_State2);
  
 
 }
