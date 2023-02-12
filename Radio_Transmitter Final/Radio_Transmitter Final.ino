@@ -39,15 +39,12 @@ void setup()
   if (!driver.init())
         Serial.println("init failed");
   
-  
-  
-
 }
 
 void loop()
 {
     //Get analog data from pot
-    //raw_right_Speed = analogRead(A0);
+    //The following calculations is to create a deadzone for the potentiometer, and allow direction controls using one pot for each side.
     raw_right_Speed = analogRead(A0);
     if (raw_right_Speed>=1023) raw_right_Speed =1024;
     if (raw_right_Speed>=500 && raw_right_Speed<=524) {
@@ -80,6 +77,7 @@ void loop()
       raw_left_Direction = 0;
     }
 
+  //Direction based on the position of the pot
     radioBuf.right_Direction = raw_right_Direction;
     radioBuf.left_Direction = raw_left_Direction;
     
@@ -89,6 +87,7 @@ void loop()
     
     
     //Timer to send signal
+    //Sends signal every 20 cycles
     if (counter>=20){
       driver.send((uint8_t *)tx_buf, size_radioBuf);
       driver.waitPacketSent();

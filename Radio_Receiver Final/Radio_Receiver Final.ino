@@ -22,10 +22,11 @@ struct radioBuf{
   unsigned int right_Direction;
 }radioBuf;
 
+//Direction states for High and Low
 int l_State1, l_State2, r_State1, r_State2;
 
 void setup() {
-  
+  //Pin assignment
   pinMode (IN1, OUTPUT);
   pinMode (IN2, OUTPUT);
   pinMode (IN3, OUTPUT);
@@ -37,11 +38,9 @@ void setup() {
   Serial.begin(9600);  // Debugging only
   if (!driver.init())
          Serial.println("init failed");
-
 }
 
 void loop() {
-
   //Allows receiver to receive max length messages
   uint8_t buf[RH_ASK_MAX_MESSAGE_LEN];
   uint8_t buflen = sizeof(buf);
@@ -51,6 +50,7 @@ void loop() {
     int i;
     // Message with a good checksum received, dump it.
     driver.printBuffer("Got:", buf, buflen);
+    //Copies data received from radio into RadioBuf Structure
     memcpy(&radioBuf, buf, sizeof(radioBuf));
     Serial.print("Right Speed");
     Serial.print(radioBuf.right_Speed);
@@ -78,13 +78,11 @@ void loop() {
     l_State1 = LOW;
     l_State2 = HIGH;
   }
-
+  //assigning IO and PWM states
   analogWrite(ENA, radioBuf.right_Speed);
   analogWrite(ENB, radioBuf.left_Speed); 
   digitalWrite(IN1, r_State1);
   digitalWrite(IN2, r_State2);
   digitalWrite(IN3, l_State1);
   digitalWrite(IN4, l_State2);
- 
-
 }
