@@ -51,12 +51,12 @@ void loop()
       radioBuf.right_Speed = 0;
     }
     else if (raw_right_Speed<500){
-      radioBuf.right_Speed = (255-raw_right_Speed*78/500);
+      radioBuf.right_Speed = (255-raw_right_Speed*78/250);
       raw_right_Direction = 1;
     }
 
     else if (raw_right_Speed>524){
-      radioBuf.right_Speed = raw_right_Speed*78/500+95.256;
+      radioBuf.right_Speed = raw_right_Speed*78/250-63;
       raw_right_Direction = 0;
     }
 
@@ -68,12 +68,12 @@ void loop()
     }
 
     else if (raw_left_Speed<500){
-      radioBuf.left_Speed = (255-raw_left_Speed*78/500);
+      radioBuf.left_Speed = (255-raw_left_Speed*78/250);
       raw_left_Direction = 1;
     }
 
     else if (raw_left_Speed>524){
-      radioBuf.left_Speed = raw_left_Speed*78/500+95.256;
+      radioBuf.left_Speed = raw_left_Speed*78/250-63;;
       raw_left_Direction = 0;
     }
 
