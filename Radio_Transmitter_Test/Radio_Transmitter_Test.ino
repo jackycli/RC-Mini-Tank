@@ -1,22 +1,35 @@
+//Include Libraries
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
 
+//create an RF24 object
+RF24 radio(9, 8);  // CE, CSN
 
-
-#include <RH_ASK.h>
-#include <SPI.h> // Not actually used but needed to compile
-
-RH_ASK driver(2000,12,12,5);
+//address through which two modules communicate.
+const byte address[6] = "00001";
 
 void setup()
 {
-    Serial.begin(9600);	  // Debugging only
-    if (!driver.init())
-         Serial.println("init failed");
+  while (!Serial);
+    Serial.begin(9600);
+  radio.begin();
+  
+  //set the address
+  radio.openWritingPipe(address);
+  
+  //Set module as transmitter
+  radio.stopListening();
 }
-
 void loop()
 {
-    const char *msg = "Hello World!";
-    driver.send((uint8_t *)msg, strlen(msg));
-    driver.waitPacketSent();
-    delay(1000);
+  //Send message to receiver
+  const char text[] = "Hello World";
+  radio.write(&text, sizeof(text));
+  //write() returns type boolean use to confirm if data was sent
+  if (radio.write(&text, sizeof(text))){
+    Serial.println("data sent");
+  }
+  Serial.println(text);
+  delay(1000);
 }

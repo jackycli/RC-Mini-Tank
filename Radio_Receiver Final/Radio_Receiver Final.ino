@@ -9,7 +9,7 @@ const int IN1 = 4;
 
 //PWM pin assignment
 const int ENA = 3;
-const int ENB = 11;
+const int ENB = 10;
 
 //Both using pin 12, on transmitter and receiver
 RH_ASK driver(2000,12,12,5);
