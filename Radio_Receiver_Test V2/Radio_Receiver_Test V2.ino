@@ -4,15 +4,15 @@
 #include <RF24.h>
 
 
-// //Pin assignment
-// const int IN4 = 7;
-// const int IN3 = 6;
-// const int IN2 = 5;
-// const int IN1 = 4;
+//Pin assignment
+const int IN4 = 6;
+const int IN3 = 5;
+const int IN2 = 4;
+const int IN1 = 3;
 
-// //PWM pin assignment
-// const int ENA = 3;
-// const int ENB = 10;
+//PWM pin assignment
+const int ENA = 9;
+const int ENB = 10;
 
 //create an RF24 object
 RF24 radio(7,8);  // CSN,mCE

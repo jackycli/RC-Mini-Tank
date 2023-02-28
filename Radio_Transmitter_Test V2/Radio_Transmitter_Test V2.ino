@@ -61,13 +61,13 @@ void loop()
     raw_left_Speed = 1024;
   }
   //Deadzone
-  if (raw_left_Speed>=504 && raw_left_Speed<=506){
+  if (raw_left_Speed>=504 && raw_left_Speed<=507){
     radioBuf.left_Speed = 0;
   }
   //Forward
-  else if (raw_left_Speed>506){
-    float left_front_correction_value = 255.0/(1024.0-506.0);
-    radioBuf.left_Speed = (raw_left_Speed-506)*left_front_correction_value;
+  else if (raw_left_Speed>507){
+    float left_front_correction_value = 255.0/(1024.0-507.0);
+    radioBuf.left_Speed = (raw_left_Speed-507)*left_front_correction_value;
     raw_left_Direction = 1;
   }
   //Backward
