@@ -4,32 +4,28 @@
 #include <RF24.h>
 
 //create an RF24 object
-RF24 radio(9, 8);  // CE, CSN
+RF24 radio(7,8);  // CSN,mCE
 
 //address through which two modules communicate.
-const byte address[6] = "00001";
+const byte address[6] = "ABCDE";
 
 void setup()
 {
-  while (!Serial);
-    Serial.begin(9600);
+  Serial.begin(9600);
   radio.begin();
-  
+   
   //set the address
-  radio.openReadingPipe(1, address);
-  
-  //Set module as receiver
+  radio.openReadingPipe(0,address);
+  radio.setPALevel(RF24_PA_MIN);
+  //Set module as transmitter
   radio.startListening();
 }
-
 void loop()
 {
-  //Read the data if available in buffer
-  if (radio.available())
-  {
-    char text[32] = {0};
-    radio.read(&text, sizeof(text));
+
+  if (radio.available()){
+    char text[32] = "";
+    radio.read(&text,sizeof(text));
     Serial.println(text);
   }
-  
 }
