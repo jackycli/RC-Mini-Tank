@@ -33,21 +33,23 @@ int l_State1, l_State2, r_State1, r_State2;
 
 void setup() {
   //Pin assignment
-  // pinMode (IN1, OUTPUT);
-  // pinMode (IN2, OUTPUT);
-  // pinMode (IN3, OUTPUT);
-  // pinMode (IN4, OUTPUT);
+  pinMode (IN1, OUTPUT);
+  pinMode (IN2, OUTPUT);
+  pinMode (IN3, OUTPUT);
+  pinMode (IN4, OUTPUT);
 
-  // pinMode (ENA, OUTPUT);
-  // pinMode (ENB, OUTPUT);
+  pinMode (ENA, OUTPUT);
+  pinMode (ENB, OUTPUT);
   
   Serial.begin(9600);  // Debugging only
 
+  //Begin radio
   radio.begin();
    
   //set the address
   radio.openReadingPipe(0,address);
   radio.setPALevel(RF24_PA_HIGH);
+
   //Set module as transmitter
   radio.startListening();
 }
@@ -56,11 +58,13 @@ void loop() {
   //Allows receiver to receive max length messages
   uint8_t buf[32] = "";
   
-  if (radio.available()) // Non-blocking
+  if (radio.available()) // If message to be received
   {
     int i;
-    // Message with a good checksum received, dump it.
+
+    //Read
     radio.read(buf,sizeof(buf));
+
     //Copies data received from radio into RadioBuf Structure
     memcpy(&radioBuf, buf, sizeof(radioBuf));
 
@@ -73,6 +77,8 @@ void loop() {
     Serial.print("    Right Direction");
     Serial.println(radioBuf.right_Direction);
   }
+
+  //Assigning HIGH LOW based on direction received 
   if (radioBuf.right_Direction == 0){
     r_State1 = HIGH;
     r_State2 = LOW;
@@ -90,11 +96,20 @@ void loop() {
     l_State1 = LOW;
     l_State2 = HIGH;
   }
-  //assigning IO and PWM states
-  // analogWrite(ENA, radioBuf.right_Speed);
-  // analogWrite(ENB, radioBuf.left_Speed); 
-  // digitalWrite(IN1, r_State1);
-  // digitalWrite(IN2, r_State2);
-  // digitalWrite(IN3, l_State1);
-  // digitalWrite(IN4, l_State2);
+
+  //Rounding to reduce motor whine at low PWM
+  if(radioBuf.right_Speed<50){
+    radioBuf.right_Speed = 0;
+  }
+  if(radioBuf.left_Speed<50){
+    radioBuf.left_Speed = 0;
+  }
+
+  //Assigning IO and PWM states
+  analogWrite(ENA, radioBuf.left_Speed);
+  analogWrite(ENB, radioBuf.right_Speed); 
+  digitalWrite(IN1, l_State1);
+  digitalWrite(IN2, l_State2);
+  digitalWrite(IN3, r_State1);
+  digitalWrite(IN4, r_State2);
 }
