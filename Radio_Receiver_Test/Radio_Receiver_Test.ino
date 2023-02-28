@@ -16,7 +16,7 @@ void setup()
    
   //set the address
   radio.openReadingPipe(0,address);
-  radio.setPALevel(RF24_PA_MIN);
+  radio.setPALevel(RF24_PA_HIGH);
   //Set module as transmitter
   radio.startListening();
 }
