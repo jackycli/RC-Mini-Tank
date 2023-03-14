@@ -1,18 +1,24 @@
-#include <RH_ASK.h>
-#include <SPI.h> // Not actualy used but needed to compile
+//Include Libraries
+#include <SPI.h>
+#include <nRF24L01.h>
+#include <RF24.h>
+
 
 //Pin assignment
-const int IN4 = 7;
-const int IN3 = 6;
-const int IN2 = 5;
-const int IN1 = 4;
+const int IN4 = 6;
+const int IN3 = 5;
+const int IN2 = 4;
+const int IN1 = 3;
 
 //PWM pin assignment
-const int ENA = 3;
+const int ENA = 9;
 const int ENB = 10;
 
-//Both using pin 12, on transmitter and receiver
-RH_ASK driver(2000,12,12,5);
+//create an RF24 object
+RF24 radio(7,8);  // CSN,mCE
+
+//address through which two modules communicate.
+const byte address[6] = "ABCDE";
 
 //Create data structure to be received over radio, 8 bytes long
 struct radioBuf{
@@ -36,31 +42,43 @@ void setup() {
   pinMode (ENB, OUTPUT);
   
   Serial.begin(9600);  // Debugging only
-  if (!driver.init())
-         Serial.println("init failed");
+
+  //Begin radio
+  radio.begin();
+   
+  //set the address
+  radio.openReadingPipe(0,address);
+  radio.setPALevel(RF24_PA_HIGH);
+
+  //Set module as transmitter
+  radio.startListening();
 }
 
 void loop() {
   //Allows receiver to receive max length messages
-  uint8_t buf[RH_ASK_MAX_MESSAGE_LEN];
-  uint8_t buflen = sizeof(buf);
+  uint8_t buf[32] = "";
   
-  if (driver.recv(buf, &buflen)) // Non-blocking
+  if (radio.available()) // If message to be received
   {
     int i;
-    // Message with a good checksum received, dump it.
-    driver.printBuffer("Got:", buf, buflen);
+
+    //Read
+    radio.read(buf,sizeof(buf));
+
     //Copies data received from radio into RadioBuf Structure
     memcpy(&radioBuf, buf, sizeof(radioBuf));
-    Serial.print("Right Speed");
-    Serial.print(radioBuf.right_Speed);
-    Serial.print("    Right Direction");
-    Serial.print(radioBuf.right_Direction);
-    Serial.print("    Left Speed");
+
+    Serial.print("Left Speed");
     Serial.print(radioBuf.left_Speed);
     Serial.print("    Left Direction");
-    Serial.println(radioBuf.left_Direction);
+    Serial.print(radioBuf.left_Direction);
+    Serial.print("    Right Speed");
+    Serial.print(radioBuf.right_Speed);
+    Serial.print("    Right Direction");
+    Serial.println(radioBuf.right_Direction);
   }
+
+  //Assigning HIGH LOW based on direction received 
   if (radioBuf.right_Direction == 0){
     r_State1 = HIGH;
     r_State2 = LOW;
@@ -78,11 +96,20 @@ void loop() {
     l_State1 = LOW;
     l_State2 = HIGH;
   }
-  //assigning IO and PWM states
-  analogWrite(ENA, radioBuf.right_Speed);
-  analogWrite(ENB, radioBuf.left_Speed); 
-  digitalWrite(IN1, r_State1);
-  digitalWrite(IN2, r_State2);
+
+  //Rounding to reduce motor whine at low PWM
+  if(radioBuf.right_Speed<50){
+    radioBuf.right_Speed = 0;
+  }
+  if(radioBuf.left_Speed<50){
+    radioBuf.left_Speed = 0;
+  }
+
+  //Assigning IO and PWM states
+  analogWrite(ENB, radioBuf.left_Speed);
+  analogWrite(ENA, radioBuf.right_Speed); 
   digitalWrite(IN3, l_State1);
   digitalWrite(IN4, l_State2);
+  digitalWrite(IN1, r_State1);
+  digitalWrite(IN2, r_State2);
 }

@@ -69,12 +69,12 @@ void loop()
   //Forward
   else if (raw_left_Speed>left_Max_Deadzone){
     radioBuf.left_Speed = (raw_left_Speed-left_Max_Deadzone)*left_front_correction_value;
-    raw_left_Direction = 0;
+    raw_left_Direction = 1;
   }
   //Backward
   else if(raw_left_Speed<left_Min_Deadzone){
     radioBuf.left_Speed = (left_Min_Deadzone-raw_left_Speed)*left_back_correction_value;
-    raw_left_Direction = 1;
+    raw_left_Direction = 0;
   }
 
 
@@ -101,12 +101,12 @@ void loop()
   //Forward
   else if (raw_right_Speed>right_Max_Deadzone){
     radioBuf.right_Speed = (raw_right_Speed-right_Max_Deadzone)*right_front_correction_value;
-    raw_right_Direction = 0;
+    raw_right_Direction = 1;
   }
   //Backward
   else if(raw_right_Speed<right_Min_Deadzone){
     radioBuf.right_Speed = (right_Min_Deadzone-raw_right_Speed)*right_back_correction_value;
-    raw_right_Direction = 1;
+    raw_right_Direction = 0;
   }
 
   //Direction based on the position of the pot
